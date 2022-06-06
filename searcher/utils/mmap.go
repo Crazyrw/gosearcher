@@ -2,6 +2,7 @@ package utils
 
 import (
 	"os"
+	"strconv"
 	"strings"
 	"syscall"
 )
@@ -77,8 +78,13 @@ func GetAllByteArrayKV(data []byte) (k [][]byte, v [][]byte) {
 }
 
 // SplitDocIdsFromValue get docIds from value
-func SplitDocIdsFromValue(value string) []string {
+func SplitDocIdsFromValue(value string) []int {
 	split1 := value[1 : len(value)-1]
 	split2 := strings.Split(split1, " ")
-	return split2
+	var docIds []int
+	for _, item := range split2 {
+		docId, _ := strconv.Atoi(item)
+		docIds = append(docIds, docId)
+	}
+	return docIds
 }

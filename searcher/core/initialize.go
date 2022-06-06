@@ -1,15 +1,15 @@
 package core
 
 import (
+	"goSearcher/searcher/btree"
 	"goSearcher/searcher/db"
-	"sync"
 )
 
-var kv sync.Map
+var MemoryBTree *btree.BPlusTree
 
 func init() {
 	db.ConnectMySql()
 }
 func Initialize() {
-	//createInvertIndex() //落盘
+	MemoryBTree = CreateMemoryBtree("searcher/data/terms/dictionary.txt")
 }
