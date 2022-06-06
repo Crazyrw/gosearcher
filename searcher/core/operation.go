@@ -18,6 +18,8 @@ import (
 	"time"
 )
 
+var kv sync.Map
+
 //将数据库中所有的文本进行分词 存储到dictionary1.txt
 /**
 //1.读400w条文档数据 时间很短
