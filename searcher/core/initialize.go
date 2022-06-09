@@ -11,5 +11,5 @@ func init() {
 	db.ConnectMySql()
 }
 func Initialize() {
-	MemoryBTree = CreateMemoryBtree("searcher/data/terms/dictionary.txt")
+	MemoryBTree = CreateMemoryBtree("searcher/data/terms/dictionary1.txt")
 }

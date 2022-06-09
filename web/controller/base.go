@@ -7,7 +7,14 @@ import (
 	"goSearcher/searcher/model"
 	"goSearcher/searcher/utils"
 	"goSearcher/searcher/words"
+	"net/http"
 )
+
+func Index(c *gin.Context) {
+	//userInfo := getCurrentUser(c)
+
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"login": false})
+}
 
 func Query(c *gin.Context) {
 	var documents []model.Docs

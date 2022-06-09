@@ -8,6 +8,7 @@ import (
 func InitBaseRouter(router *gin.RouterGroup) {
 	baseRouter := router.Group("base")
 	{
-		baseRouter.GET("query", controller.Query) //user search keys
+		baseRouter.GET("/index", controller.Index)
+		baseRouter.GET("/query", controller.Query) //user search keys
 	}
 }
