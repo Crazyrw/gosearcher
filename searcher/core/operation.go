@@ -136,7 +136,7 @@ func cutTerms(step, total int) {
 	//kv.Range(f)
 }
 
-//根据分词的结果进行创建b+树 存储到data.db
+//根据分词的结果进行创建b+树 存储到data.model
 //TODO: 落盘btree 一个磁盘块无法存储一个节点  有的节点数据过大>4K
 func createInvertIndex() {
 	start := time.Now()

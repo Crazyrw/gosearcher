@@ -1,7 +1,6 @@
 package main
 
 import (
-	"goSearcher/searcher/core"
 	"goSearcher/web/router"
 )
 
@@ -9,7 +8,11 @@ import (
 
 func main() {
 	//searcher service
-	core.Initialize()
+	//core.Initialize()
+
+	// DB Init
+	//model.UserDBInit()
+
 	//web service
 	router := router.SetupRouter()
 	router.Run(":9090")

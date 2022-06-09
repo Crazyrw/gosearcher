@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>用户登录</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  <!--    <link rel="stylesheet" href="../static/plugin/font-awesome/css/font-awesome.min.css">-->
+  <style>
+    .account {
+      width: 400px;
+      background-color: #f0f0f0;
+      margin-top: 30px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid #f0f0f0;
+      padding: 10px 30px 30px 30px;
+      -webkit-box-shadow: 5px 10px 10px rgba(0, 0, 0, .05);
+      box-shadow: 5px 10px 10px rgba(0, 0, 0, .05);
+    }
+
+    .account .title {
+      font-size: 25px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .account .form-group {
+      margin-bottom: 20px;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #494A5F;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="">goSeacher</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/api/user/login">登 录</a></li>
+        <li><a href="/api/user/register">注 册</a></li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="account">
+  <div class="title">用户登录</div>
+  <form method="POST" novalidate>
+    <div class="form-group">
+      <label for="username">用户名</label>
+      <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名">
+    </div>
+    <div class="form-group">
+      <label for="password">密码</label>
+      <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
+    </div>
+    {{if ne .message "OK"}}
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      {{.message}}
+    </div>
+    {{end}}
+    <button type="submit" class="btn btn-primary">登录</button>
+
+  </form>
+</div>
+
+</body>
+
+
+</html>
