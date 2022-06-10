@@ -1,18 +1,18 @@
 package main
 
 import (
+	"goSearcher/searcher/core"
+	"goSearcher/searcher/db"
 	"goSearcher/web/router"
 )
 
 //var stat runtime.MemStats
-
+func init() {
+	db.ConnectMySql()
+}
 func main() {
 	//searcher service
-	//core.Initialize()
-
-	// DB Init
-	//model.UserDBInit()
-
+	core.Initialize()
 	//web service
 	router := router.SetupRouter()
 	router.Run(":9090")

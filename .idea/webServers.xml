@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="fa54202b-afa7-4450-9bf5-27cb07ba3677" name="desc.pcl.ac.cn">
+        <fileTransfer accessType="SFTP" host="decs.pcl.ac.cn" port="5346" sshConfigId="b2b4e5ed-4c61-493c-af06-a8f55a8d26c3" sshConfig="root@decs.pcl.ac.cn:5346 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
