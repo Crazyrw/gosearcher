@@ -5,22 +5,20 @@ import (
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"goSearcher/searcher/db"
 	"goSearcher/web/model"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"log"
 	"net/http"
 	"regexp"
 )
 
-func DbConnect() (db *gorm.DB) {
-	dsn := "ligen:LiGen1129!@tcp(127.0.0.1:3306)/goSearcher?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	return db
-}
+//func DbConnect() (db *gorm.DB) {
+//	dsn := "ligen:LiGen1129!@tcp(127.0.0.1:3306)/goSearcher?charset=utf8mb4&parseTime=True&loc=Local"
+//	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//	return db
+//}
 
 func setCurrentUser(c *gin.Context, userInfo model.User) {
 	session := sessions.Default(c)
@@ -50,8 +48,6 @@ func UserLoginPost(c *gin.Context) {
 	username := c.PostForm("username")
 	password := c.PostForm("password")
 
-	db := DbConnect()
-
 	// 返回结果
 	resp := gin.H{}
 
@@ -62,7 +58,7 @@ func UserLoginPost(c *gin.Context) {
 	userObject := model.User{}
 
 	// 查询数据库
-	if err := db.Where("username = ? AND password = ?", username, new_password).First(&userObject).Error; err != nil {
+	if err := db.MysqlDB.Where("username = ? AND password = ?", username, new_password).First(&userObject).Error; err != nil {
 		resp = gin.H{
 			"login":   false,
 			"message": "用户名或密码错误",
@@ -90,13 +86,11 @@ func UserRegisterPost(c *gin.Context) {
 	password := c.PostForm("password")
 	confirm_password := c.PostForm("confirm_password")
 
-	db := DbConnect()
-
 	// 返回结果
 	resp := gin.H{"message": "OK"}
 
 	// 查询用户名是否存在
-	if err := db.Where("username = ?", username).First(&model.User{}).Error; err == nil {
+	if err := db.MysqlDB.Where("username = ?", username).First(&model.User{}).Error; err == nil {
 		resp = gin.H{
 			"message": "用户名已存在",
 		}
@@ -117,7 +111,7 @@ func UserRegisterPost(c *gin.Context) {
 	}
 
 	// 查询手机号是否存在
-	if err := db.Where("phone = ?", phone).First(&model.User{}).Error; err == nil {
+	if err := db.MysqlDB.Where("phone = ?", phone).First(&model.User{}).Error; err == nil {
 		resp = gin.H{
 			"message": "手机号已存在",
 		}
@@ -142,7 +136,7 @@ func UserRegisterPost(c *gin.Context) {
 
 	user := model.User{Username: username, Phone: phone, Password: new_password}
 
-	result := db.Create(&user) // 通过数据的指针来创建
+	result := db.MysqlDB.Create(&user) // 通过数据的指针来创建
 	fmt.Println(result)
 
 	c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"login": false})
