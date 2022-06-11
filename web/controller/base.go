@@ -32,17 +32,18 @@ func Query(c *gin.Context) {
 	//search in index
 	for _, item := range words {
 		//之后如果进行优化的话 可以并发的读
-		if value, ok := core.MemoryBTree.Find(item); ok {
-			ids := utils.SplitDocIdsFromValue(fmt.Sprintf("%v", value))
-			//union docIds
-			for _, id := range ids {
-				_, ok := docIdsMap[id]
-				if !ok {
-					docIdsMap[id] = 1
-					docIds = append(docIds, id)
-				}
+		value := core.SkipList.Search([]byte(item)).Value
+
+		ids := utils.SplitDocIdsFromValue(string(value))
+		//union docIds
+		for _, id := range ids {
+			_, ok := docIdsMap[id]
+			if !ok {
+				docIdsMap[id] = 1
+				docIds = append(docIds, id)
 			}
 		}
+
 	}
 	//relate search
 	realateSearchIds := relatedSearch(content, docIds)
