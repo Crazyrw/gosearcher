@@ -13,9 +13,9 @@ type User struct {
 }
 
 type UserSave struct {
-	User    User `gorm:"ForeignKey:UserId;AssociationForeignKey:ID"`
-	UserId  int
-	SaveUrl string `gorm:"not null"`
+	User      User `gorm:"ForeignKey:UserId;AssociationForeignKey:ID"`
+	UserId    int
+	SaveDocId int `gorm:"not null"`
 }
 
 //func UserDBInit() {

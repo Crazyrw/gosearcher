@@ -16,7 +16,8 @@
         body {
             margin: 0;
             padding: 0;
-            background: #494A5F;
+            background: #1292c1;
+
             font-weight: 500;
         }
 
@@ -66,6 +67,29 @@
             color: #F9F0DA;
         }
 
+        .result-area{
+            margin-top: 30px;
+            background-color: #f0f0f0;
+        }
+
+        .result-block{
+            margin: 20px;
+            padding: 20px;
+            background-color: #949494;
+        }
+
+        .pagination-bar{
+            text-align: center; /*让div内部文字居中*/
+
+            border-radius: 20px;
+
+            margin: auto;
+            position: absolute;
+
+            left: 0;
+            right: 0;
+
+        }
     </style>
 </head>
 <body>
@@ -87,7 +111,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
             <ul class="nav navbar-nav navbar-right">
-                {{if not .login}}
+                {{if not .userInfo}}
                     <li><a href="/api/user/login">登 录</a></li>
                     <li><a href="/api/user/register">注 册</a></li>
                 {{else}}
@@ -101,11 +125,31 @@
     </div>
 </nav>
 <div class="search-bar">
-    <form method="get">
+    <form method="get" action="/api/base/query">
         <input name="content" type="text" placeholder="请输入您要搜索的内容...">
         <button type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
     </form>
 </div>
+
+{{if .url}}
+<div class="container result-area">
+   <div class="result-block">
+        搜索结果
+   </div>
+</div>
+{{end}}
+
+
+<div class="container pagination-bar">
+    <nav aria-label="...">
+        <ul class="pagination">
+            <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+            <li class="disabled"><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+        </ul>
+    </nav>
+</div>
+
 
 </body>
 

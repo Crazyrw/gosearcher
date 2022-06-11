@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"goSearcher/searcher/core"
 	"goSearcher/searcher/db"
 	"goSearcher/searcher/model"
@@ -13,12 +12,14 @@ import (
 	"math"
 	"net/http"
 	"sort"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Index(c *gin.Context) {
 	//userInfo := getCurrentUser(c)
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"login": false})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
 func Query(c *gin.Context) {
 
