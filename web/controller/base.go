@@ -47,20 +47,36 @@ func Query(c *gin.Context) {
 	//relate search
 	realateSearchIds := relatedSearch(content, docIds)
 	queries := getQueriesByIds(realateSearchIds)
-	//continue to score
 	result.ResponseSuccessWithData(c, queries)
+
+	//continue to score
+
 }
 
+//-------------internal functions---------------
 // relate search
-func relatedSearch(content string, docIds []int) (queryIds []int) {
-	// save to mysql-query
-	query := &model.Query{
-		Query:  content,
-		DocIds: fmt.Sprintf("%v", docIds),
-	}
-	db.MysqlDB.Create(query)
+type querySim struct {
+	queryId    int
+	similarity float64
+}
 
-	newqid := query.ID
+func relatedSearch(content string, docIds []int) (queryIds []int) {
+
+	var queryModel = model.Query{Query: content}
+	results := db.MysqlDB.First(&queryModel)
+	var newqid int
+	if results.Error == nil {
+		// save to mysql-query
+		query := &model.Query{
+			Query:  content,
+			DocIds: fmt.Sprintf("%v", docIds),
+		}
+		db.MysqlDB.Create(query)
+		newqid = query.ID
+	} else {
+		newqid = queryModel.ID
+	}
+
 	//get add queries
 	var allQueries []model.Query
 	result := db.MysqlDB.Find(&allQueries)
@@ -93,13 +109,6 @@ func relatedSearch(content string, docIds []int) (queryIds []int) {
 	}
 	return
 }
-
-type querySim struct {
-	queryId    int
-	similarity float64
-}
-
-//-------------internal functions---------------
 func preProcess(qmap map[int][]int) map[int][]int {
 	// dict结构如下：
 	//     {"Query1": {DocID1, DocID2, DocID3,...}
