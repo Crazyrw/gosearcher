@@ -1,5 +1,12 @@
 package result
 
+import "goSearcher/searcher/model"
+
+type QueryResult struct {
+	RelatedSearch []string
+	Documents     []model.Docs
+}
+
 type Result struct {
 	State bool `json:"state"`
 
