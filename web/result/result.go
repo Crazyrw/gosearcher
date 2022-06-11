@@ -1,8 +1,10 @@
 package result
 
+import "goSearcher/searcher/rank"
+
 type QueryResult struct {
 	RelatedSearch []string
-	Documents     []int
+	Documents     []rank.DocIdPos
 }
 
 type Result struct {
