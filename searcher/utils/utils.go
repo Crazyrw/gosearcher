@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"encoding/json"
 	"goSearcher/searcher/btree"
+	"goSearcher/searcher/db"
+	"goSearcher/searcher/model"
 	"io/ioutil"
 	"log"
 	"os"
@@ -75,6 +77,12 @@ func BtreeToDisk(btree *btree.BPlusTree, path string) {
 	}
 }
 
-//func BtreeFromDisk(path string) *btree.BPlusTree {
-//
-//}
+// GetDocuments get documents by docIds
+func GetDocuments(docIds []int) []model.Docs {
+	var files []model.Docs
+	results := db.MysqlDB.Find(&files, docIds)
+	if results.Error != nil {
+		log.Fatalln("正排索引失败")
+	}
+	return files
+}
