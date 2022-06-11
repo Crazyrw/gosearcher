@@ -1,7 +1,6 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
 
 	"gorm.io/driver/mysql"
@@ -14,7 +13,6 @@ import (
 )
 
 var MysqlDB *gorm.DB
-var MysqlDBPool sql.DB
 var err error
 
 //root:122513gzhGZH!!@tcp(decs.pcl.ac.cn:1762)/search_engine?
