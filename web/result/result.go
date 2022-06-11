@@ -1,10 +1,8 @@
 package result
 
-import "goSearcher/searcher/model"
-
 type QueryResult struct {
 	RelatedSearch []string
-	Documents     []model.Docs
+	Documents     []int
 }
 
 type Result struct {

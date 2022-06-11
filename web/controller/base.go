@@ -41,16 +41,14 @@ func Query(c *gin.Context) {
 	if len(docIds) == 0 {
 		result.Error("no results")
 	}
-	//get all documents
-	documents := core.GetDocuments(docIds)
-	//to score: get new documents
+	//to score: get new docIds
 
 	//relate search
 	relatedSearchQueries := relate_search.GetRelatedSearchQueries(content, docIds)
 
 	result.ResponseSuccessWithData(c, result.QueryResult{
 		RelatedSearch: relatedSearchQueries,
-		Documents:     documents,
+		Documents:     docIds,
 	})
 
 }
