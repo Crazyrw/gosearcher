@@ -7,6 +7,7 @@ import (
 	"goSearcher/searcher/utils"
 	"goSearcher/searcher/words"
 	"goSearcher/web/result"
+	"math"
 	"net/http"
 )
 

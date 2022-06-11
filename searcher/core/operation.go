@@ -198,13 +198,3 @@ func CreateSkipList(path string) *skip_list.SkipList {
 	log.Println("query 二胎(", len(strs), ") cost ", cost2)
 	return skiplist
 }
-
-// GetDocuments get documents by docIds
-func GetDocuments(docIds []int) []model.Docs {
-	var files []model.Docs
-	results := db.MysqlDB.Find(&files, docIds)
-	if results.Error != nil {
-		log.Fatalln("正排索引失败")
-	}
-	return files
-}
