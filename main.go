@@ -1,7 +1,6 @@
 package main
 
 import (
-	"goSearcher/searcher/core"
 	"goSearcher/searcher/db"
 	"goSearcher/web/router"
 )
@@ -12,7 +11,7 @@ func init() {
 }
 func main() {
 	//searcher service
-	core.Initialize()
+	//core.Initialize()
 	//web service
 	router := router.SetupRouter()
 	router.Run(":9090")

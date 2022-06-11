@@ -3,39 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <title>用户注册</title>
-
+    <meta name="description" content="Login - Register Template">
+    <meta name="author" content="Lorenzo Angelino aka MrLolok">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
           integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <!--    <link rel="stylesheet" href="../static/plugin/font-awesome/css/font-awesome.min.css">-->
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #57c0d0;
+            font-weight: 500;
+        }
+
         .account {
-            width: 400px;
+            width: 340px;
+            height: 460px;
             background-color: #f0f0f0;
             margin-top: 30px;
             margin-left: auto;
             margin-right: auto;
-            border: 1px solid #f0f0f0;
+            order-radius: 0.35em;
             padding: 10px 30px 30px 30px;
-            -webkit-box-shadow: 5px 10px 10px rgba(0, 0, 0, .05);
-            box-shadow: 5px 10px 10px rgba(0, 0, 0, .05);
-        }
-
-        .account .title {
-            font-size: 25px;
-            font-weight: bold;
+            /*-webkit-box-shadow: 5px 10px 10px rgba(0, 0, 0, .05);*/
+            box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.2);
             text-align: center;
         }
 
-        .account .form-group {
-            margin-bottom: 20px;
+        .account .title {
+            background-color: #f0f0f0;
+            width: 100%;
+            height: 69px;
+            padding: 20px 0px;
+            border-radius: 0.35em;
+            font-size: 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background: #1292c1;
-            font-weight: 500;
+        .account .form-group {
+            margin-bottom:15px;
+            margin-left: 15px;
+            width: 240px;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            padding: 8px 0px;
+            margin-top: 15px;
         }
+
+
+        .input-addon {
+            float: left;
+            background-color: #f0f0f0;
+
+            /*border: 1px solid #373b3d;*/
+            padding: 4px 20px;
+            /*border-right: 1px solid rgba(255, 255, 255, 0.05);*/
+        }
+        input[type=text] {
+            color: #949494;
+            margin: 0;
+            background-color: #f0f0f0;
+            border: 1px solid #373b3d;
+            padding: 6px 4px;
+            border-radius: 3px;
+        }
+
+        input[type=text]:focus {
+            border: 1px solid #373b3d;
+        }
+
+        input[type=password] {
+            color: #949494;
+            margin: 0;
+            background-color: #f0f0f0;
+            border: 1px solid #373b3d;
+            padding: 6px 4px;
+            border-radius: 3px;
+        }
+
+        input[type=password]:focus {
+            border: 1px solid #373b3d;
+        }
+        button[type=submit] {
+            padding: 6px 25px;
+            background: #373E4A;
+            color: #C1C3C6;
+            font-weight: bold;
+            border: 0 none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .register {
+            padding: 5px 0;
+            text-align: center;
+            margin-left: 15px;
+            width: 85%;
+            border-top: 1px solid #C1C3C6;
+        }
+
+        .clearfix {
+            clear: both;
+        }
+
+        #register-link {
+            margin-top: 10px;
+            margin-left: 10px;
+            padding: 6px 25px;
+            background: #373E4A;
+            color: #C1C3C6;
+            font-weight: bold;
+            border: 0 none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -67,24 +152,35 @@
 </nav>
 
 <div class="account">
-    <div class="title">用户注册</div>
-    <form method="POST" novalidate>
+    <div class="title">
+        <i class="material-icons lock">lock</i> Register
+    </div>
+    <form method="POST" >
         <div class="form-group">
-            <label for="username">用户名</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名">
-        </div>
-        <div class="form-group">
-            <label for="phone">手机号</label>
-            <input type="text" class="form-control" id="phone" name="phone" placeholder="请输入手机号">
-        </div>
-        <div class="form-group">
-            <label for="password">密码</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
+            <div class="input-addon">
+                <i class="material-icons">face</i>
+            </div>
+            <input type="text" id="username" name="username" placeholder="请输入用户名">
         </div>
 
         <div class="form-group">
-            <label for="confirm_password">确认密码</label>
-            <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+            <div class="input-addon">
+                <i class="material-icons">phone</i>
+            </div>
+            <input type="text"  id="phone" name="phone" placeholder="请输入手机号">
+        </div>
+        <div class="form-group">
+            <div class="input-addon">
+                <i class="material-icons">vpn_key</i>
+            </div>
+            <input type="password" id="password" name="password" placeholder="请输入密码">
+        </div>
+
+        <div class="form-group">
+            <div class="input-addon">
+                <i class="material-icons">vpn_key</i>
+            </div>
+            <input type="password"  id="confirm_password" name="confirm_password"
                    placeholder="请输入确认密码">
         </div>
         {{if ne .message "OK"}}
@@ -95,7 +191,11 @@
             </div>
         {{end}}
 
-        <button type="submit" class="btn btn-primary">注册</button>
+        <button type="submit" class="btn btn-primary">注 册</button>
+        <div class="register">
+            已经有账号？<br>
+            <a href="/api/user/login"><button id="register-link" class="btn btn-primary">登 录</button></a>
+        </div>
 
     </form>
 </div>
