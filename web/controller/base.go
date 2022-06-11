@@ -54,7 +54,16 @@ func Query(c *gin.Context) {
 
 }
 
-func rank(query string, docs []string) (docsScore []float64) {
+func rank(query string, docIds []int) (docIdsRank []int) {
+
+	documents := utils.GetDocuments(docIds)
+	var docIdsForRank []int //存放要排序的docid
+	var docs []string       //存放要排序的caption
+	for _, item := range documents {
+		docs = append(docs, item.Caption)
+		docIdsForRank = append(docIdsForRank, item.ID)
+	}
+
 	tokenizer := words.NewTokenizer()
 	queryWords := tokenizer.CutContent(query)         //query的分词结果
 	IDFs := make(map[string]float64, len(queryWords)) //保存query中每个word的idf值
@@ -72,12 +81,19 @@ func rank(query string, docs []string) (docsScore []float64) {
 		IDFs[word] = idf
 	}
 
-	docsScore = make([]float64, len(docs), len(docs))
+	docsScore := make([]float64, len(docs), len(docs))
 	for k, doc := range docs {
 		score := getScore(query, doc, IDFs)
 		docsScore[k] = score
 	}
-	return docsScore
+
+	//保存所有的docId和对应的score
+	rankMap := make(map[int]float64, len(docs))
+	for index, score := range docsScore {
+		rankMap[docIdsForRank[index]] = score
+	}
+
+	return docIdsRank
 }
 
 //获取query对于某个doc的tf-idf值
