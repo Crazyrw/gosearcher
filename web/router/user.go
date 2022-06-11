@@ -1,8 +1,9 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"goSearcher/web/controller"
+
+	"github.com/gin-gonic/gin"
 )
 
 func InitUserRouter(router *gin.RouterGroup) {
@@ -17,6 +18,8 @@ func InitUserRouter(router *gin.RouterGroup) {
 		userRouter.POST("/register", controller.UserRegisterPost)
 
 		userRouter.GET("/logout", controller.UserLogout)
+
+		userRouter.GET("/delete", controller.UserDelete)
 
 	}
 }
