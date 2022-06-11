@@ -149,8 +149,9 @@ func UserLogout(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
 
-//用户注销账号
+//用户-注销账号
 func UserDelete(c *gin.Context) {
+
 	var user model.User
 	var bookmark model.Bookmark
 
