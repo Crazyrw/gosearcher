@@ -4,7 +4,7 @@ import "goSearcher/searcher/rank"
 
 type QueryResult struct {
 	RelatedSearch []string
-	Documents     []rank.DocIdPos
+	Documents     []rank.DocumentPos
 }
 
 type Result struct {

@@ -1,8 +1,9 @@
 package result
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 //TODO: 返回给前端的格式
@@ -15,6 +16,7 @@ type ResponseData struct {
 
 // ResponseSuccessWithData 携带数据成功返回
 func ResponseSuccessWithData(c *gin.Context, data interface{}) {
+
 	c.JSON(http.StatusOK, &ResponseData{
 		State:   true,
 		Message: "success",
