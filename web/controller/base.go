@@ -24,7 +24,7 @@ func Index(c *gin.Context) {
 func Query(c *gin.Context) {
 
 	docIdsMap := make(map[int]int)
-	var docIds []int //union set
+	var docIds []int //union set, content's results
 	content := c.Query("content")
 	//cut content to many terms by cut model
 	tokenizer := words.NewTokenizer()
@@ -44,7 +44,9 @@ func Query(c *gin.Context) {
 				docIds = append(docIds, id)
 			}
 		}
-
+	}
+	if len(docIds) == 0{
+		//return no results
 	}
 	//relate search
 	realateSearchIds := relatedSearch(content, docIds)
@@ -63,25 +65,25 @@ type querySim struct {
 }
 
 func relatedSearch(content string, docIds []int) (queryIds []int) {
-
-	var queryModel = model.Query{Query: content}
-	results := db.MysqlDB.First(&queryModel)
 	var newqid int
-	if results.Error == nil {
-		// save to mysql-query
-		query := &model.Query{
-			Query:  content,
-			DocIds: fmt.Sprintf("%v", docIds),
-		}
-		db.MysqlDB.Create(query)
-		newqid = query.ID
-	} else {
-		newqid = queryModel.ID
+	query := &model.Query{
+		Query:  content,
+		DocIds: fmt.Sprintf("%v", docIds),
 	}
-
+	results := db.MysqlDB.Create(query)
+	if results.Error != nil{
+		var queryModel = model.Query{Query: content}
+		db.MysqlDB.Where("query = ?", content).First(&queryModel)
+		newqid = queryModel.ID
+	}else{
+		newqid = query.ID
+	}
+	
+	// fmt.Println(queryModel)
 	//get add queries
 	var allQueries []model.Query
 	result := db.MysqlDB.Find(&allQueries)
+	// fmt.Println(allQueries[5].Query)
 	if result.Error != nil {
 		log.Println("get all queries error ", result.Error)
 	}
@@ -89,12 +91,16 @@ func relatedSearch(content string, docIds []int) (queryIds []int) {
 	for _, item := range allQueries {
 		queryDocIdMap[item.ID] = utils.SplitDocIdsFromValue(item.DocIds)
 	}
+	// fmt.Printf("%T", queryDocIdMap[16])
 	//invert queryid-docids -> docid-queryids
 	docIdQueryMap := preProcess(queryDocIdMap)
+	// fmt.Println(docIdQueryMap[80553124])
 	//intersection newquery & otherqueries
 	interSection := queryInterSection(docIdQueryMap, newqid)
+	fmt.Println(interSection)
 	//similarity newquery & otherqueries
 	similarity := querySimMatrix(queryDocIdMap, newqid, interSection)
+	fmt.Println(similarity)
 	//map转成结构切片按照Sim进行降序排序
 	querySimMap := make([]querySim, 0)
 	for k, v := range similarity {
@@ -109,6 +115,7 @@ func relatedSearch(content string, docIds []int) (queryIds []int) {
 		}
 		queryIds = append(queryIds, querySimMap[i].queryId)
 	}
+	fmt.Println(queryIds)
 	return
 }
 func preProcess(qmap map[int][]int) map[int][]int {
@@ -127,6 +134,7 @@ func preProcess(qmap map[int][]int) map[int][]int {
 	return doc_q
 }
 func queryInterSection(doc_q map[int][]int, newqid int) map[int]int {
+	fmt.Println(newqid)
 	//建立newquery与其他query的doc交集dict, 其中C[v]代表的含义是查询newqid和查询v之间共同doc数
 	queryInterSection := make(map[int]int)
 	for _, qids := range doc_q {
