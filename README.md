@@ -1,25 +1,27 @@
 ### 索引创建
     1.内存版 B+树测试
-    === RUN   TestCreateMemoryBtree
+	=== RUN   TestCreateMemoryBtree
 	12193026 12193026
-	1m27.607646013s
-	2022/06/06 11:03:40 create memory btree cost  1m27.607646013s
-	2022/06/06 11:03:40 query 二胎( 1210 ) cost  18.483µs
-	--- PASS: TestCreateMemoryBtree (87.70s)
+	2022/06/11 10:04:09 create memory btree cost  2m45.391381925s
+	2022/06/11 10:04:09 query 二胎( 1210 ) cost  10.941µs
+	--- PASS: TestCreateMemoryBtree (165.39s)
 	PASS
+	ok      goSearcher/searcher/core        165.670s
 
-    2.内存版 SkipList测试(不知道什么原因 十分的慢)
-    === RUN   TestCreateSkipList
+    2.内存版 SkipList测试
+	=== RUN   TestCreateSkipList
 	12193026
-	2022/06/06 14:14:48 create skiplist cost  19m10.43155128s
-	2022/06/06 14:14:57 query 二胎( 10891 ) cost  20.797µs
-	--- PASS: TestCreateSkipList (1159.41s)
+	2022/06/11 10:09:25 create skiplist cost  1m47.692093479s
+	2022/06/11 10:09:25 query 二胎( 10891 ) cost  4.74µs
+	--- PASS: TestCreateSkipList (107.69s)
 	PASS
+	ok      goSearcher/searcher/core        107.937s
 
     落盘B+树存在问题 一个磁盘块不足以放下一个较大的node >4K
+	- 考虑按位存储
 
 ### skiplist
-key，value = (分词msg，mysqlid)
+key，value = (分词msg, mysqlid)
 
 最大层高48
 性能测试：   
