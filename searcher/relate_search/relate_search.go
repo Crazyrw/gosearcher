@@ -49,18 +49,18 @@ func relatedSearch(content string, docIds []int) (queryIds []int) {
 	//similarity newquery & otherqueries
 	similarity := querySimMatrix(queryDocIdMap, newqid, interSection)
 	//map转成结构切片按照Sim进行降序排序
-	querySimMap := make([]model.QuerySim, 0)
+	querySimMap := make([]querySim, 0)
 	for k, v := range similarity {
-		querySimMap = append(querySimMap, model.QuerySim{QueryId: k, Similarity: v})
+		querySimMap = append(querySimMap, querySim{queryId: k, similarity: v})
 	}
 	sort.Slice(querySimMap, func(i, j int) bool {
-		return querySimMap[i].Similarity > querySimMap[j].Similarity
+		return querySimMap[i].similarity > querySimMap[j].similarity
 	})
 	for i := 0; i < 10; i++ {
 		if i == len(querySimMap) {
 			break
 		}
-		queryIds = append(queryIds, querySimMap[i].QueryId)
+		queryIds = append(queryIds, querySimMap[i].queryId)
 	}
 	return
 }
@@ -122,4 +122,9 @@ func getQueriesByIds(queryIds []int) (queries []string) {
 		queries = append(queries, item.Query)
 	}
 	return
+}
+
+type querySim struct {
+	queryId    int
+	similarity float64
 }
