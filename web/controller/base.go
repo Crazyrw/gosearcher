@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
 	"goSearcher/searcher/core"
 	"goSearcher/searcher/rank"
 	"goSearcher/searcher/relate_search"
@@ -9,6 +9,8 @@ import (
 	"goSearcher/searcher/words"
 	"goSearcher/web/result"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Index(c *gin.Context) {
@@ -25,6 +27,7 @@ func Query(c *gin.Context) {
 	//cut content to many terms by cut model
 	tokenizer := words.NewTokenizer()
 	words := tokenizer.CutContent(content)
+	fmt.Println(words)
 	//search in index
 	for _, item := range words {
 		//之后如果进行优化的话 可以并发的读
@@ -45,13 +48,16 @@ func Query(c *gin.Context) {
 		result.Error("no results")
 	}
 	//to score: get new docIds
-	rankDocIds := rank.Rank(docIds, words, lens)
+	rankDocuments := rank.Rank(docIds, words, lens)
+	// fmt.Println("---------------------------------------")
+	// fmt.Println(rankDocuments)
 	//relate search
 	relatedSearchQueries := relate_search.GetRelatedSearchQueries(content, docIds)
-
-	result.ResponseSuccessWithData(c, result.QueryResult{
+	var d = result.QueryResult{
 		RelatedSearch: relatedSearchQueries,
-		Documents:     rankDocIds,
-	})
+		Documents:     rankDocuments,
+	}
+	//fmt.Println(d.Documents[1], d.Documents[2])
+	result.ResponseSuccessWithData(c, d)
 
 }
