@@ -71,7 +71,7 @@ func UserLoginPost(c *gin.Context) {
 	setCurrentUser(c, userObject)
 	userInfo := getCurrentUser(c)
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"login": true, "userInfo": userInfo})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"userInfo": userInfo})
 
 }
 
@@ -139,11 +139,11 @@ func UserRegisterPost(c *gin.Context) {
 	result := db.MysqlDB.Create(&user) // 通过数据的指针来创建
 	fmt.Println(result)
 
-	c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"login": false})
-	return
+	c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"message": "OK"})
+
 }
 
 func UserLogout(c *gin.Context) {
 	delCurrentUser(c)
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"login": false})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
