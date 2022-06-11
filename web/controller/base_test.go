@@ -7,4 +7,5 @@ import (
 
 func TestQuery(t *testing.T) {
 	db.ConnectMySql()
+
 }
