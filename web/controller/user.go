@@ -3,12 +3,13 @@ package controller
 import (
 	"crypto/md5"
 	"fmt"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-gonic/gin"
 	"goSearcher/searcher/db"
 	"goSearcher/web/model"
 	"net/http"
 	"regexp"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 )
 
 //func DbConnect() (db *gorm.DB) {
@@ -145,5 +146,18 @@ func UserRegisterPost(c *gin.Context) {
 
 func UserLogout(c *gin.Context) {
 	delCurrentUser(c)
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+}
+
+//用户注销账号
+func UserDelete(c *gin.Context) {
+	var user model.User
+	var bookmark model.Bookmark
+
+	phone := c.Query("phone")
+
+	db.MysqlDB.Unscoped().Where("telephone = ?", phone).Delete(&user)
+	//用户注销的时候，连带把他所有的书签信息全部删除
+	db.MysqlDB.Unscoped().Where("telephone = ? ", phone).Delete(&bookmark)
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
