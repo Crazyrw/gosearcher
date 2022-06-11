@@ -45,7 +45,7 @@ func Query(c *gin.Context) {
 		result.Error("no results")
 	}
 	//to score: get new docIds
-	rankDocIds := rank.Rank(content, docIds, words, lens)
+	rankDocIds := rank.Rank(docIds, words, lens)
 	//relate search
 	relatedSearchQueries := relate_search.GetRelatedSearchQueries(content, docIds)
 
