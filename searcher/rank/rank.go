@@ -81,6 +81,9 @@ func hightLight(terms []string, documentsRank []rankRes) []DocumentPos {
 			}
 			pos = append(pos, p)
 		}
+		if pos == nil{
+			continue
+		}
 		documentPosItem := DocumentPos{
 			Document: item.document,
 			Pos:      pos,

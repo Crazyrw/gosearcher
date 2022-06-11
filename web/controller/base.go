@@ -20,7 +20,7 @@ func Index(c *gin.Context) {
 }
 func Query(c *gin.Context) {
 
-	docIdsMap := make(map[int]int)
+	docIdsMap := make(map[int]int, 0)
 	var docIds []int //union set, content's results
 	var lens []int   //term-len(docIds)
 	content := c.Query("content")
@@ -32,23 +32,27 @@ func Query(c *gin.Context) {
 	for _, item := range words {
 		//之后如果进行优化的话 可以并发的读
 		value := core.SkipList.Search([]byte(item)).Value
-
 		ids := utils.SplitDocIdsFromValue(string(value))
+		// fmt.Println(ids)
 		lens = append(lens, len(ids))
 		//union docIds
 		for _, id := range ids {
 			_, ok := docIdsMap[id]
 			if !ok {
 				docIdsMap[id] = 1
-				docIds = append(docIds, id)
 			}
 		}
 	}
+	for key := range docIdsMap {
+		docIds = append(docIds, key)
+	}
+	// fmt.Println(docIds)
 	if len(docIds) == 0 {
 		result.Error("no results")
 	}
 	//to score: get new docIds
 	rankDocuments := rank.Rank(docIds, words, lens)
+	
 	// fmt.Println("---------------------------------------")
 	// fmt.Println(rankDocuments)
 	//relate search
