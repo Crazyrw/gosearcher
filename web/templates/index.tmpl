@@ -80,6 +80,10 @@
             font-size: 20px;
         }
 
+        .caption{
+            font-size: 20px;
+        }
+
         .pagination-bar {
             text-align: center; /*让div内部文字居中*/
 
@@ -152,6 +156,12 @@
     </form>
 </div>
 
+{{if not .state}}
+    <div class="container result-area">
+        <div class="caption">暂无该词条的搜索结果</div>
+    </div>
+
+{{else}}
 {{if .Data}}
     {{range .Data.Documents}}
         <div class="container result-area">
@@ -163,11 +173,15 @@
                     </a>
                 </div>
                 <div class="caption"></div>
-                <div><a id="bookmark" class="btn btn-default" href="" role="button"><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span></a></div>
+                <div>
+                    <a class="bookmark" class="btn btn-default" href="/api/bookmark/add?docid={{.ID}}" role="button">
+                        <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
+                    </a>
+                </div>
             </div>
         </div>
-    {{end}}
 
+    {{end}}
 
     <div class="container related-search">
         <h3>相关搜索</h3>
@@ -188,10 +202,12 @@
             </ul>
         </nav>
     </div>
+
+{{end}}
+
 {{end}}
 
 
-</body>
 <script>
     $(function () {
         toHTML();
@@ -207,6 +223,8 @@
         {{end}}
     }
 
-
 </script>
+
+</body>
+
 </html>

@@ -13,9 +13,9 @@ import (
 func Create_bookmark(c *gin.Context) {
 
 	var user model.User
-
-	phone := c.Query("phone")
 	bookmark_name := c.Query("bookmark_name")
+	phone := c.Query("phone")
+
 	db.MysqlDB.First(&user, "phone = ?", phone)
 
 	if err := db.MysqlDB.Model(&user).Update("bookmark_name", bookmark_name).Error; err != nil {

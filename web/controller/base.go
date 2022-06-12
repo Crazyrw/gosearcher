@@ -20,7 +20,7 @@ var relatedSearchQueries []string
 func Index(c *gin.Context) {
 	//userInfo := getCurrentUser(c)
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true})
 }
 
 func Paging(total int) *utils.Paging {
@@ -90,8 +90,8 @@ func Query(c *gin.Context) {
 	if pageNum <= 0 {
 		pageNum = 1
 	}
-	if pageNum >= int(page.PageCount) {
-		pageNum = int(page.PageCount)
+	if pageNum >= page.PageCount {
+		pageNum = page.PageCount
 	}
 
 	// 分页返回数据
@@ -100,7 +100,7 @@ func Query(c *gin.Context) {
 		Documents:     data.Documents[10*(pageNum-1) : 10*pageNum],
 	}
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"content": content, "page": page, "Data": pageData})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
 
 }
 
@@ -122,7 +122,7 @@ func GetLastPage(c *gin.Context) {
 	page.Page = pageNum
 	content := c.Query("content")
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"content": content, "page": page, "Data": pageData})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
 }
 
 func GetNextPage(c *gin.Context) {
@@ -144,5 +144,5 @@ func GetNextPage(c *gin.Context) {
 
 	content := c.Query("content")
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"content": content, "page": page, "Data": pageData})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
 }
