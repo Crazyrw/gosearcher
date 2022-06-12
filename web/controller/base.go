@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"goSearcher/searcher/core"
 	"goSearcher/searcher/rank"
 	"goSearcher/searcher/relate_search"
@@ -9,21 +10,38 @@ import (
 	"goSearcher/searcher/words"
 	"goSearcher/web/result"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
+
+var page *utils.Paging
+var data result.QueryResult
+var relatedSearchQueries []string
 
 func Index(c *gin.Context) {
 	//userInfo := getCurrentUser(c)
 
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
+
+func Paging(total int) *utils.Paging {
+
+	paging := utils.CreatePaging(1, 10, total)
+
+	return paging
+}
+
 func Query(c *gin.Context) {
 
 	docIdsMap := make(map[int]int, 0)
 	var docIds []int //union set, content's results
-	var lens []int   //term-len(docIds)
+	var lens []int   //terms-len(docIds)
+
 	content := c.Query("content")
+	exclude := c.Query("exclued")
+
+	fmt.Println(exclude)
+
+	pageNum := 1
+
 	//cut content to many terms by cut model
 	tokenizer := words.NewTokenizer()
 	words := tokenizer.CutContent(content)
@@ -56,17 +74,74 @@ func Query(c *gin.Context) {
 	// fmt.Println("---------------------------------------")
 	// fmt.Println(rankDocuments)
 	//relate search
-	relatedSearchQueries := relate_search.GetRelatedSearchQueries(content, docIds)
-	var data = result.QueryResult{
+
+	relatedSearchQueries = relate_search.GetRelatedSearchQueries(content, docIds)
+	data = result.QueryResult{
 		RelatedSearch: relatedSearchQueries,
 		Documents:     rankDocuments,
 	}
-	//fmt.Println(d.Documents[1], d.Documents[2])
-	// result.ResponseSuccessWithData(c, d)
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{
-		"State":   true,
-		"Message": "success",
-		"Data":    data,
-	})
 
+	resultsNum := len(data.Documents)
+
+	page = Paging(resultsNum)
+	page.Page = pageNum
+
+	if pageNum <= 0 {
+		pageNum = 1
+	}
+	if pageNum >= int(page.PageCount) {
+		pageNum = int(page.PageCount)
+	}
+
+	// 分页返回数据
+	var pageData = result.QueryResult{
+		RelatedSearch: relatedSearchQueries,
+		Documents:     data.Documents[10*(pageNum-1) : 10*pageNum],
+	}
+
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"content": content, "page": page, "Data": pageData})
+
+}
+
+func GetLastPage(c *gin.Context) {
+	pageNum := page.Page - 1
+
+	if pageNum <= 0 {
+		pageNum = 1
+	}
+	if pageNum >= page.PageCount {
+		pageNum = page.PageCount
+	}
+
+	// 分页返回数据
+	var pageData = result.QueryResult{
+		RelatedSearch: relatedSearchQueries,
+		Documents:     data.Documents[10*(pageNum-1) : 10*pageNum],
+	}
+	page.Page = pageNum
+	content := c.Query("content")
+
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"content": content, "page": page, "Data": pageData})
+}
+
+func GetNextPage(c *gin.Context) {
+	pageNum := page.Page + 1
+
+	if pageNum <= 0 {
+		pageNum = 1
+	}
+	if pageNum >= int(page.PageCount) {
+		pageNum = int(page.PageCount)
+	}
+
+	// 分页返回数据
+	var pageData = result.QueryResult{
+		RelatedSearch: relatedSearchQueries,
+		Documents:     data.Documents[10*(pageNum-1) : 10*pageNum],
+	}
+	page.Page = pageNum
+
+	content := c.Query("content")
+
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"content": content, "page": page, "Data": pageData})
 }
