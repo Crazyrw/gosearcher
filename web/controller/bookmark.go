@@ -2,6 +2,7 @@ package controller
 
 import (
 	"goSearcher/searcher/db"
+	searcherModel "goSearcher/searcher/model"
 	"goSearcher/web/model"
 	"net/http"
 
@@ -33,7 +34,7 @@ func Add_bookmark(c *gin.Context) {
 
 	phone := c.Query("phone")
 	docid := c.Query("docid")
-	var docs model.Docs
+	var docs searcherModel.Docs
 	db.MysqlDB.Where("id = ?", docid).First(&docs)
 	caption := docs.Caption
 	newBookmark := model.Bookmark{
