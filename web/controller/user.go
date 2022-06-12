@@ -76,7 +76,7 @@ func UserLoginPost(c *gin.Context) {
 			"login":   false,
 			"message": "系统异常，发放token失败",
 		})
-		log.Println("token generate error : %v", err)
+		log.Println("token generate error :", err)
 		return
 	}
 
