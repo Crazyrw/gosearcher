@@ -2,6 +2,7 @@ package router
 
 import (
 	"goSearcher/web/controller"
+	"goSearcher/web/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +20,9 @@ func InitUserRouter(router *gin.RouterGroup) {
 
 		userRouter.GET("/logout", controller.UserLogout)
 
-		userRouter.GET("/delete", controller.UserDelete)
+		userRouter.DELETE("/delete", controller.UserDelete)
+
+		userRouter.GET("/auth", middleware.AuthMiddleware(), controller.Auth_user)
 
 	}
 }

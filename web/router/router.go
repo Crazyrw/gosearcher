@@ -1,11 +1,12 @@
 package router
 
 import (
+	"goSearcher/web/middleware"
+	"net/http"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"goSearcher/web/middleware"
-	"net/http"
 )
 
 func SetupRouter() *gin.Engine {
@@ -26,8 +27,9 @@ func SetupRouter() *gin.Engine {
 	group := router.Group("/api")
 	{
 		//InitIndexRouter(group) //index
-		InitBaseRouter(group) //base service
-		InitUserRouter(group) // user register/login
+		InitBaseRouter(group)     //base service
+		InitUserRouter(group)     // user register/login
+		InitBookMarkRouter(group) //bookmark service
 	}
 	return router
 }
