@@ -85,7 +85,7 @@ func queryInterSection(doc_q map[int][]int, newqid int) map[int]int {
 	//建立newquery与其他query的doc交集dict, 其中C[v]代表的含义是查询newqid和查询v之间共同doc数
 	queryInterSection := make(map[int]int)
 	for _, qids := range doc_q {
-		if in(newqid, qids) {
+		if In(newqid, qids) {
 			for _, qid := range qids {
 				if qid == newqid {
 					continue
@@ -96,7 +96,7 @@ func queryInterSection(doc_q map[int][]int, newqid int) map[int]int {
 	}
 	return queryInterSection
 }
-func in(id int, ids []int) bool {
+func In(id int, ids []int) bool {
 	for _, v := range ids {
 		if id == v {
 			return true

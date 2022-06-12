@@ -3,12 +3,14 @@ package controller
 import (
 	"fmt"
 	"goSearcher/searcher/core"
+	"goSearcher/searcher/model"
 	"goSearcher/searcher/rank"
 	"goSearcher/searcher/relate_search"
 	"goSearcher/searcher/utils"
 	"goSearcher/searcher/words"
 	"goSearcher/web/result"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +18,17 @@ import (
 var page *utils.Paging
 var data result.QueryResult
 var relatedSearchQueries []string
+var rankDocIds []int //union set, content's results
+var terms []string
+
+type Position struct {
+	Start int
+	End   int
+}
+type DocumentPos struct {
+	Document model.Docs
+	Pos      []Position
+}
 
 func Index(c *gin.Context) {
 	//userInfo := getCurrentUser(c)
@@ -31,24 +44,27 @@ func Paging(total int) *utils.Paging {
 }
 
 func Query(c *gin.Context) {
+	rankDocIds = nil
 
 	docIdsMap := make(map[int]int, 0)
-	var docIds []int //union set, content's results
-	var lens []int   //terms-len(docIds)
+	var lens []int //terms-len(docIds)
 
 	content := c.Query("content")
 	exclude := c.Query("exclued")
 
-	fmt.Println(exclude)
+	excludeDocIds := queryExclude(exclude)
 
 	pageNum := 1
 
 	//cut content to many terms by cut model
 	tokenizer := words.NewTokenizer()
-	words := tokenizer.CutContent(content)
-	fmt.Println(words)
+	terms = tokenizer.CutContent(content)
+	if len(terms) == 0 {
+		result.Error("no results")
+	}
+	fmt.Println(terms)
 	//search in index
-	for _, item := range words {
+	for _, item := range terms {
 		//之后如果进行优化的话 可以并发的读
 		value := core.SkipList.Search([]byte(item)).Value
 		ids := utils.SplitDocIdsFromValue(string(value))
@@ -57,11 +73,13 @@ func Query(c *gin.Context) {
 		//union docIds
 		for _, id := range ids {
 			_, ok := docIdsMap[id]
-			if !ok {
+			_, ok1 := excludeDocIds[id]
+			if !ok && !ok1 {
 				docIdsMap[id] = 1
 			}
 		}
 	}
+	var docIds []int
 	for key := range docIdsMap {
 		docIds = append(docIds, key)
 	}
@@ -70,19 +88,15 @@ func Query(c *gin.Context) {
 		result.Error("no results")
 	}
 	//to score: get new docIds
-	rankDocuments := rank.Rank(docIds, words, lens)
+	rankDocIds = rank.Rank(docIds, terms, lens)
 
 	// fmt.Println("---------------------------------------")
 	// fmt.Println(rankDocuments)
 	//relate search
 
 	relatedSearchQueries = relate_search.GetRelatedSearchQueries(content, docIds)
-	data = result.QueryResult{
-		RelatedSearch: relatedSearchQueries,
-		Documents:     rankDocuments,
-	}
 
-	resultsNum := len(data.Documents)
+	resultsNum := len(rankDocIds)
 
 	page = Paging(resultsNum)
 	page.Page = pageNum
@@ -94,17 +108,24 @@ func Query(c *gin.Context) {
 		pageNum = page.PageCount
 	}
 
+	//第一页的数据 返回
+	firstDocIds := docIds[10*(pageNum-1) : 10*pageNum]
+	fmt.Println(firstDocIds)
+
+	docs := utils.GetDocumentsFor(firstDocIds)
+	fmt.Println(docs)
+
+	finalDocs := hightLight(terms, docs)
 	// 分页返回数据
 	var pageData = result.QueryResult{
 		RelatedSearch: relatedSearchQueries,
-		Documents:     data.Documents[10*(pageNum-1) : 10*pageNum],
+		Documents:     finalDocs,
 	}
-
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
-
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"content": content, "page": page, "Data": pageData})
 }
 
 func GetLastPage(c *gin.Context) {
+
 	pageNum := page.Page - 1
 
 	if pageNum <= 0 {
@@ -114,13 +135,17 @@ func GetLastPage(c *gin.Context) {
 		pageNum = page.PageCount
 	}
 
+	page.Page = pageNum
+	content := c.Query("content")
+
+	docIds := rankDocIds[10*(pageNum-1) : 10*pageNum]
+	docs := utils.GetDocumentsFor(docIds)
+	finalDocs := hightLight(terms, docs)
 	// 分页返回数据
 	var pageData = result.QueryResult{
 		RelatedSearch: relatedSearchQueries,
-		Documents:     data.Documents[10*(pageNum-1) : 10*pageNum],
+		Documents:     finalDocs,
 	}
-	page.Page = pageNum
-	content := c.Query("content")
 
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
 }
@@ -135,14 +160,87 @@ func GetNextPage(c *gin.Context) {
 		pageNum = int(page.PageCount)
 	}
 
+	page.Page = pageNum
+	content := c.Query("content")
+
+	docIds := rankDocIds[10*(pageNum-1) : 10*pageNum]
+	docs := utils.GetDocumentsFor(docIds)
+	finalDocs := hightLight(terms, docs)
 	// 分页返回数据
 	var pageData = result.QueryResult{
 		RelatedSearch: relatedSearchQueries,
-		Documents:     data.Documents[10*(pageNum-1) : 10*pageNum],
+		Documents:     finalDocs,
 	}
-	page.Page = pageNum
-
-	content := c.Query("content")
 
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
+}
+
+func queryExclude(exclude string) map[int]int {
+	tokenizer := words.NewTokenizer()
+	excludeTerms := tokenizer.CutContent(exclude)
+	docIdsMap := make(map[int]int, 0)
+	if len(excludeTerms) == 0 {
+		result.Error("no results")
+	}
+	//search in index
+	for _, item := range terms {
+		//之后如果进行优化的话 可以并发的读
+		value := core.SkipList.Search([]byte(item)).Value
+		ids := utils.SplitDocIdsFromValue(string(value))
+		// fmt.Println(ids)
+		//union docIds
+		for _, id := range ids {
+			_, ok := docIdsMap[id]
+			if !ok {
+				docIdsMap[id] = 1
+			}
+		}
+	}
+	return docIdsMap
+}
+
+func hightLight(terms []string, documents []model.Docs) []model.Docs {
+	var documentPos []DocumentPos
+	for _, item := range documents {
+		content := item.Caption
+		var pos []Position
+		for _, term := range terms {
+			start := strings.Index(content, term)
+			if start == -1 {
+				continue
+			}
+			end := start + len(term) - 1
+			p := Position{
+				Start: start,
+				End:   end,
+			}
+			pos = append(pos, p)
+		}
+		if pos == nil {
+			continue
+		}
+		documentPosItem := DocumentPos{
+			Document: item,
+			Pos:      pos,
+		}
+		// fmt.Println(documentPosItem)
+		documentPos = append(documentPos, documentPosItem)
+	}
+
+	// fmt.Println(documentPos)
+	spanStart := "<span style=\"color:red\">"
+	spanEnd := "</span>"
+	finalDocs := make([]model.Docs, 0)
+	for _, docPos := range documentPos {
+		caption := docPos.Document.Caption
+		for _, pos := range docPos.Pos {
+			start := pos.Start
+			end := pos.End
+			word := caption[start : end+1]
+			docPos.Document.Caption = strings.ReplaceAll(docPos.Document.Caption, word, spanStart+word+spanEnd)
+		}
+		finalDocs = append(finalDocs, docPos.Document)
+	}
+	// return documentPos
+	return finalDocs
 }
