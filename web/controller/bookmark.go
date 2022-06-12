@@ -5,8 +5,22 @@ import (
 	"goSearcher/web/model"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
+
+func setCurrentBookmark(c *gin.Context, bookmark []model.Bookmark) {
+	session := sessions.Default(c)
+	session.Set("currentBookmark", bookmark)
+	// 一定要Save否则不生效，若未使用gob注册User结构体，调用Save时会返回一个Error
+	session.Save()
+}
+
+func delCurrentBookmark(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Delete("currentBookmark")
+	session.Save()
+}
 
 //创建用户书签
 func Create_bookmark(c *gin.Context) {
@@ -137,6 +151,8 @@ func Get_bookmark(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, resp)
 		return
 	}
+	// 写入Session
+	setCurrentBookmark(c, bookmarks)
 
 	c.JSON(http.StatusOK, gin.H{"bookmarks": bookmarks})
 
