@@ -32,7 +32,7 @@ func RemoveSpace(str string) string {
 
 //百度停用词
 func getAllStopWords() {
-	file, err := os.Open("../../searcher/words/stopwords.txt")
+	file, err := os.Open("earcher/words/stopwords.txt")
 	if err != nil {
 		log.Fatalln("stopwords.txt 打开失败 ", err.Error())
 	}
