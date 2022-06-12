@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"goSearcher/searcher/core"
 	"goSearcher/searcher/rank"
 	"goSearcher/searcher/relate_search"
@@ -10,6 +9,8 @@ import (
 	"goSearcher/searcher/words"
 	"goSearcher/web/result"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 var page *utils.Paging
