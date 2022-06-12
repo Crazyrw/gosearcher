@@ -6,7 +6,8 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
           integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <style>
         * {
@@ -16,8 +17,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: #1292c1;
-
+            background: #57c0d0;
             font-weight: 500;
         }
 
@@ -67,18 +67,21 @@
             color: #F9F0DA;
         }
 
-        .result-area{
+        .result-area {
             margin-top: 30px;
+            border-radius: 20px;
             background-color: #f0f0f0;
         }
 
-        .result-block{
+        .result-block {
             margin: 20px;
             padding: 20px;
-            background-color: #949494;
+            border-radius: 20px;
+            font-size: 20px;
+            background-color: #F9F0DA;
         }
 
-        .pagination-bar{
+        .pagination-bar {
             text-align: center; /*让div内部文字居中*/
 
             border-radius: 20px;
@@ -126,32 +129,65 @@
 </nav>
 <div class="search-bar">
     <form method="get" action="/api/base/query">
-        <input name="content" type="text" placeholder="请输入您要搜索的内容...">
-        <button type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+        <input id="content" name="content" type="text" placeholder="请输入您要搜索的内容...">
+        <button id="search" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        </button>
     </form>
 </div>
 
-{{if .url}}
-<div class="container result-area">
-   <div class="result-block">
-        搜索结果
-   </div>
-</div>
+{{if .Data}}
+
+    {{range .Data.Documents}}
+
+        <div class="container result-area">
+            <div class="result-block">
+                <div class="caption"></div>
+                <div class="col-xs-6 col-md-3">
+                    <a href="#" class="thumbnail">
+                        <img src="{{ .Url }}" alt="">
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    {{end}}
+
+    <div class="container related-search">
+        <h3>相关搜索</h3>
+        <ul class="list-group">
+            {{range .Data.RelatedSearch}}
+                <a href="/api/base/query?content={{.}}&page=1"><span class="label label-default">{{.}}</span></a>
+            {{end}}
+        </ul>
+    </div>
+
+
+    <div class="container pagination-bar">
+        <nav aria-label="...">
+            <ul class="pager">
+                <li id="lastPage"><a href="/api/base/last?content={{.content}}">上一页</a></li>
+                <li id="nextPage"><a href="/api/base/next?content={{.content}}">下一页</a></li>
+                <span>当前在第{{.page.Page}}页，共{{.page.PageCount}}页</span>
+            </ul>
+        </nav>
+    </div>
 {{end}}
 
 
-<div class="container pagination-bar">
-    <nav aria-label="...">
-        <ul class="pagination">
-            <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-            <li class="disabled"><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
-        </ul>
-    </nav>
-</div>
-
-
 </body>
+<script>
+    $(function () {
+       toHTML();
 
+    });
 
+    function toHTML() {
+        var index = 0
+        {{range .Data.Documents}}
+        
+            $('.caption').eq(index).html({{.Caption}});
+            index ++
+        {{end}}
+    }
+</script>
 </html>
