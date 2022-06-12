@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"goSearcher/searcher/db"
+	searcherModel "goSearcher/searcher/model"
 	"goSearcher/web/model"
 	"net/http"
 
@@ -54,7 +55,7 @@ func AddBookmark(c *gin.Context) {
 
 	phone := c.Query("phone")
 	docid := c.Query("docid")
-	var docs model.Docs
+	var docs searcherModel.Docs
 	if err := db.MysqlDB.Where("id = ?", docid).First(&docs).Error; err != nil {
 		resp := gin.H{
 			"message": "添加失败",
