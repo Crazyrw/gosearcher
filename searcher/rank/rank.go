@@ -64,11 +64,12 @@ func Rank(docIds []int, terms []string, lens []int) []model.Docs {
 	spanEnd := "</span>"
 	finalDocs := make([]model.Docs, 0)
 	for _, docPos := range documentPos {
+		caption := docPos.Document.Caption
 		for _, pos := range docPos.Pos {
 			start := pos.Start
 			end := pos.End
-			caption := docPos.Document.Caption
-			docPos.Document.Caption = caption[:start] + spanStart + caption[start:end+1] + spanEnd
+			word := caption[start : end+1]
+			docPos.Document.Caption = strings.ReplaceAll(docPos.Document.Caption, word, spanStart+word+spanEnd)
 		}
 		finalDocs = append(finalDocs, docPos.Document)
 	}

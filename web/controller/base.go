@@ -63,10 +63,11 @@ func Query(c *gin.Context) {
 	}
 	//fmt.Println(d.Documents[1], d.Documents[2])
 	// result.ResponseSuccessWithData(c, d)
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{
-		"State":   true,
-		"Message": "success",
-		"Data":    data,
-	})
+	// c.HTML(http.StatusOK, "index.tmpl", gin.H{
+	// 	"State":   true,
+	// 	"Message": "success",
+	// 	"Data":    data,
+	// })
+	result.ResponseSuccessWithData(c, data)
 
 }
