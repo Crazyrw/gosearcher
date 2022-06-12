@@ -9,7 +9,7 @@ import (
 func InitBookMarkRouter(router *gin.RouterGroup) {
 	bookmarkRouter := router.Group("bookmark")
 	{
-		bookmarkRouter.GET("/add", controller.Add_bookmark)
+		bookmarkRouter.POST("/add", controller.AddBookmark)
 
 		bookmarkRouter.GET("/create", controller.Create_bookmark)
 
