@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"goSearcher/searcher/db"
 	"goSearcher/web/model"
 	"net/http"
@@ -29,7 +30,9 @@ func Create_bookmark(c *gin.Context) {
 }
 
 //添加书签
-func Add_bookmark(c *gin.Context) {
+func AddBookmark(c *gin.Context) {
+	currentUser := getCurrentUser(c)
+	fmt.Println(currentUser)
 
 	phone := c.Query("phone")
 	docid := c.Query("docid")
