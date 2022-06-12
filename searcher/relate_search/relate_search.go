@@ -12,7 +12,9 @@ import (
 
 func GetRelatedSearchQueries(content string, docIds []int) (queries []string) {
 	realateSearchIds := relatedSearch(content, docIds)
+	// fmt.Println("relate:", realateSearchIds)
 	queries = getQueriesByIds(realateSearchIds)
+	// fmt.Println("queries:", queries)
 	return
 }
 
@@ -114,6 +116,9 @@ func querySimMatrix(qmap map[int][]int, newqid int, queryInterSection map[int]in
 }
 func getQueriesByIds(queryIds []int) (queries []string) {
 	var queriesQ []model.Query
+	if len(queryIds) == 0 {
+		return
+	}
 	result := db.MysqlDB.Find(&queriesQ, queryIds)
 	if result.Error != nil {
 		log.Println("getQueriesByIds err ", result.Error)

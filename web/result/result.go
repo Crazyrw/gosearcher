@@ -1,10 +1,10 @@
 package result
 
-import "goSearcher/searcher/rank"
+import "goSearcher/searcher/model"
 
 type QueryResult struct {
 	RelatedSearch []string
-	Documents     []rank.DocumentPos
+	Documents     []model.Docs
 }
 
 type Result struct {
