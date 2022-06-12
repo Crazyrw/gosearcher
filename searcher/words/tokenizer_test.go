@@ -9,7 +9,7 @@ import (
 func TestTokenizer_Cut(t *testing.T) {
 	//segs.LoadDictionary("dict.txt")
 	tokenizer := NewTokenizer()
-	results := tokenizer.Cut("小明硕士那那那那那那那那那那那那那那那那毕业于中国科学院计算所，后在日本京都大学深造")
+	results := tokenizer.Cut("杨紫230米云端相聚##杨紫##花木星球")
 	fmt.Println(results)
 	//[计算 在 本京 大学 深造 小明 硕士 那 毕业于 科学院 中国 所后 日 都]
 }
@@ -21,10 +21,10 @@ func TestTokenizer_CutContent(t *testing.T) {
 }
 
 func TestJieba(t *testing.T) {
-	text := "今日头条是字节的吗"
+	text := "杨紫230米云端相聚##杨紫##花木星球"
 	tokenizer := NewTokenizer()
 	var wordMap = make(map[string]int)
-	resultChan := tokenizer.seg.Cut(text, true)
+	resultChan := tokenizer.seg.CutForSearch(text, true)
 	for word := range resultChan {
 		//去除停用词
 		_, ok := utils.AllStopsWords[word]

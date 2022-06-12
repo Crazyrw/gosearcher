@@ -4,7 +4,7 @@ import "goSearcher/searcher/model"
 
 type QueryResult struct {
 	RelatedSearch []string
-	Documents        []model.Docs
+	Documents     []model.Docs
 }
 
 type Result struct {

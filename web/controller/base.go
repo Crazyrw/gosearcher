@@ -45,6 +45,8 @@ func Paging(total int) *utils.Paging {
 
 func Query(c *gin.Context) {
 	rankDocIds = nil
+	terms = nil
+	relatedSearchQueries = nil
 
 	docIdsMap := make(map[int]int, 0)
 	var lens []int //terms-len(docIds)
@@ -61,8 +63,8 @@ func Query(c *gin.Context) {
 	terms = tokenizer.CutContent(content)
 	if len(terms) == 0 {
 		result.Error("no results")
+		return
 	}
-	fmt.Println(terms)
 	//search in index
 	for _, item := range terms {
 		//之后如果进行优化的话 可以并发的读
@@ -74,7 +76,7 @@ func Query(c *gin.Context) {
 		for _, id := range ids {
 			_, ok := docIdsMap[id]
 			_, ok1 := excludeDocIds[id]
-			if !ok && !ok1{
+			if !ok && !ok1 {
 				docIdsMap[id] = 1
 			}
 		}
@@ -86,6 +88,7 @@ func Query(c *gin.Context) {
 	// fmt.Println(docIds)
 	if len(docIds) == 0 {
 		result.Error("no results")
+		return
 	}
 	//to score: get new docIds
 	rankDocIds = rank.Rank(docIds, terms, lens)
@@ -109,11 +112,9 @@ func Query(c *gin.Context) {
 	}
 
 	//第一页的数据 返回
-	firstDocIds := docIds[10*(pageNum-1) : 10*pageNum]
-	fmt.Println(firstDocIds)
+	firstDocIds := rankDocIds[10*(pageNum-1) : 10*pageNum]
 
 	docs := utils.GetDocumentsFor(firstDocIds)
-	fmt.Println(docs)
 
 	finalDocs := hightLight(terms, docs)
 	// 分页返回数据
@@ -180,14 +181,15 @@ func queryExclude(exclude string) map[int]int {
 	excludeTerms := tokenizer.CutContent(exclude)
 	docIdsMap := make(map[int]int, 0)
 	if len(excludeTerms) == 0 {
+		fmt.Println("excludeTerms == 0")
 		result.Error("no results")
+		return nil
 	}
 	//search in index
-	for _, item := range terms {
+	for _, item := range excludeTerms {
 		//之后如果进行优化的话 可以并发的读
 		value := core.SkipList.Search([]byte(item)).Value
 		ids := utils.SplitDocIdsFromValue(string(value))
-		// fmt.Println(ids)
 		//union docIds
 		for _, id := range ids {
 			_, ok := docIdsMap[id]
