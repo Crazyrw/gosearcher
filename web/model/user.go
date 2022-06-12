@@ -6,10 +6,11 @@ import (
 
 type User struct {
 	gorm.Model
-	Id       int    `gorm:"primary_key"`
-	Username string `gorm:"not null"`
-	Phone    string `gorm:"not null"`
-	Password string `gorm:"not null"`
+	Id            int    `gorm:"primary_key"`
+	Username      string `gorm:"not null"`
+	Phone         string `gorm:"not null"`
+	Password      string `gorm:"not null"`
+	bookmark_name string
 }
 
 type UserSave struct {

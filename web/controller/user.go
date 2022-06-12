@@ -4,7 +4,9 @@ import (
 	"crypto/md5"
 	"fmt"
 	"goSearcher/searcher/db"
+	"goSearcher/searcher/utils"
 	"goSearcher/web/model"
+	"log"
 	"net/http"
 	"regexp"
 
@@ -68,11 +70,21 @@ func UserLoginPost(c *gin.Context) {
 		return
 	}
 
+	token, err := utils.ReleaseToken(userObject)
+	if err != nil {
+		c.HTML(http.StatusUnprocessableEntity, "login.tmpl", gin.H{
+			"login":   false,
+			"message": "系统异常，发放token失败",
+		})
+		log.Println("token generate error : %v", err)
+		return
+	}
+
 	// 写入Session
 	setCurrentUser(c, userObject)
 	userInfo := getCurrentUser(c)
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"userInfo": userInfo})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"userInfo": userInfo, "token": token})
 
 }
 
@@ -157,8 +169,15 @@ func UserDelete(c *gin.Context) {
 
 	phone := c.Query("phone")
 
-	db.MysqlDB.Unscoped().Where("telephone = ?", phone).Delete(&user)
+	db.MysqlDB.Unscoped().Where("phone = ?", phone).Delete(&user)
 	//用户注销的时候，连带把他所有的书签信息全部删除
-	db.MysqlDB.Unscoped().Where("telephone = ? ", phone).Delete(&bookmark)
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+	db.MysqlDB.Unscoped().Where("phone = ? ", phone).Delete(&bookmark)
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"message": "注销成功"})
+}
+
+func Auth_user(c *gin.Context) {
+	user, _ := c.Get("user")
+	c.JSON(http.StatusOK, gin.H{"code": 200, "user": user, "message": "权限满足"})
+	//c.JSON(http.StatusOK, gin.H{"code": 200, "data": gin.H{"user": dto.ToUserDto(user.(dao.User))}})
+
 }
