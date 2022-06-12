@@ -169,9 +169,21 @@ func UserDelete(c *gin.Context) {
 
 	phone := c.Query("phone")
 
-	db.MysqlDB.Unscoped().Where("phone = ?", phone).Delete(&user)
+	if err := db.MysqlDB.Unscoped().Where("phone = ?", phone).Delete(&user).Error; err != nil {
+		resp := gin.H{
+			"message": "注销失败",
+		}
+		c.JSON(http.StatusBadRequest, resp)
+		return
+	}
 	//用户注销的时候，连带把他所有的书签信息全部删除
-	db.MysqlDB.Unscoped().Where("phone = ? ", phone).Delete(&bookmark)
+	if err := db.MysqlDB.Unscoped().Where("phone = ? ", phone).Delete(&bookmark).Error; err != nil {
+		resp := gin.H{
+			"message": "注销失败",
+		}
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{"message": "注销成功"})
 }
 
