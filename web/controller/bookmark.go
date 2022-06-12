@@ -25,7 +25,6 @@ func Create_bookmark(c *gin.Context) {
 
 	//返回结果
 	c.JSON(http.StatusOK, gin.H{"message": "成功"})
-	return
 
 }
 
