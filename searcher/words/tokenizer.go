@@ -74,3 +74,25 @@ func (tokenizer *Tokenizer) CutContent(text string) []string {
 	}
 	return wordsSlice
 }
+
+//不去重的分词
+func (tokenizer *Tokenizer) CutDoc(text string) []string {
+	//不区分大小写
+	text = strings.ToLower(text)
+	//移除标点符号
+	text = utils.RemovePunctuation(text)
+	//移除所有的空格
+	text = utils.RemoveSpace(text)
+
+	var wordsSlice []string
+	resultChan := tokenizer.seg.Cut(text, true)
+	//遍历分词结果
+	for word := range resultChan {
+		//去除停用词
+		_, ok := utils.AllStopsWords[word]
+		if !ok {
+			wordsSlice = append(wordsSlice, word)
+		}
+	}
+	return wordsSlice
+}
