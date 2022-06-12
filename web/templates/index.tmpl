@@ -78,7 +78,6 @@
             padding: 20px;
             border-radius: 20px;
             font-size: 20px;
-            background-color: #F9F0DA;
         }
 
         .pagination-bar {
@@ -92,6 +91,21 @@
             left: 0;
             right: 0;
 
+        }
+
+        .content{
+            border-radius: 5px 0 0 5px;
+        }
+
+        .search{
+            border-radius: 0 5px 5px 0;
+        }
+
+        .exclude{
+            border-radius: 5px;
+            margin-top: 5px;
+            height: 30px;
+            width: 300px;
         }
     </style>
 </head>
@@ -129,9 +143,11 @@
 </nav>
 <div class="search-bar">
     <form method="get" action="/api/base/query">
-        <input id="content" name="content" type="text" placeholder="请输入您要搜索的内容...">
-        <button id="search" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        <input class="content" name="content" type="text" placeholder="请输入您要搜索的内容...">
+
+        <button class="search" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>
         </button>
+        <div><input class="exclude" name="exclued" type="text" placeholder="过滤词"></div>
     </form>
 </div>
 

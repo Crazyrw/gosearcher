@@ -36,6 +36,10 @@ func Query(c *gin.Context) {
 	var lens []int   //terms-len(docIds)
 
 	content := c.Query("content")
+	exclude := c.Query("exclued")
+
+	fmt.Println(exclude)
+
 	pageNum := 1
 
 	//cut content to many terms by cut model
