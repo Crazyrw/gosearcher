@@ -27,7 +27,7 @@ type rankScoresSliceDecrement []rankRes
 func (r rankScoresSliceDecrement) Len() int           { return len(r) }
 func (r rankScoresSliceDecrement) Swap(i, j int)      { r[i], r[j] = r[j], r[i] }
 func (r rankScoresSliceDecrement) Less(i, j int) bool { return r[i].score > r[j].score }
-func Rank(docIds []int, terms []string, lens []int) []DocumentPos {
+func Rank(docIds []int, terms []string, lens []int) []model.Docs {
 	documents := utils.GetDocuments(docIds)
 	var docIdsForRank []int //存放要排序的docid
 	var docs []string       //存放要排序的caption
@@ -60,7 +60,20 @@ func Rank(docIds []int, terms []string, lens []int) []DocumentPos {
 	// }
 	documentPos := hightLight(terms, documentsScore)
 	// fmt.Println(documentPos)
-	return documentPos
+	spanStart := "<span style=\"color:red\">"
+	spanEnd := "</span>"
+	finalDocs := make([]model.Docs, 0)
+	for _, docPos := range documentPos {
+		for _, pos := range docPos.Pos {
+			start := pos.Start
+			end := pos.End
+			caption := docPos.Document.Caption
+			docPos.Document.Caption = caption[:start] + spanStart + caption[start:end+1] + spanEnd
+		}
+		finalDocs = append(finalDocs, docPos.Document)
+	}
+	// return documentPos
+	return finalDocs
 }
 
 func hightLight(terms []string, documentsRank []rankRes) []DocumentPos {
@@ -81,7 +94,7 @@ func hightLight(terms []string, documentsRank []rankRes) []DocumentPos {
 			}
 			pos = append(pos, p)
 		}
-		if pos == nil{
+		if pos == nil {
 			continue
 		}
 		documentPosItem := DocumentPos{

@@ -52,16 +52,21 @@ func Query(c *gin.Context) {
 	}
 	//to score: get new docIds
 	rankDocuments := rank.Rank(docIds, words, lens)
-	
+
 	// fmt.Println("---------------------------------------")
 	// fmt.Println(rankDocuments)
 	//relate search
 	relatedSearchQueries := relate_search.GetRelatedSearchQueries(content, docIds)
-	var d = result.QueryResult{
+	var data = result.QueryResult{
 		RelatedSearch: relatedSearchQueries,
 		Documents:     rankDocuments,
 	}
 	//fmt.Println(d.Documents[1], d.Documents[2])
-	result.ResponseSuccessWithData(c, d)
+	// result.ResponseSuccessWithData(c, d)
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{
+		"State":   true,
+		"Message": "success",
+		"Data":    data,
+	})
 
 }
