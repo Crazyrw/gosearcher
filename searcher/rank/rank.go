@@ -41,6 +41,7 @@ func Rank(docIds []int, terms []string, lens []int) []int {
 			score: docScoreSum,
 		})
 	}
+	// fmt.Println(documentsScore[1])
 	//sort rankScores desc
 	sort.Sort(rankScoresSliceDecrement(documentsScore))
 	var afterRankSlice []int
