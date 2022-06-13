@@ -84,7 +84,7 @@ func UserLoginPost(c *gin.Context) {
 	setCurrentUser(c, userObject)
 	userInfo := getCurrentUser(c)
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"userInfo": userInfo, "token": token})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true, "userInfo": userInfo, "token": token})
 
 }
 
@@ -158,7 +158,7 @@ func UserRegisterPost(c *gin.Context) {
 
 func UserLogout(c *gin.Context) {
 	delCurrentUser(c)
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true})
 }
 
 //用户-注销账号
@@ -184,7 +184,7 @@ func UserDelete(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, resp)
 		return
 	}
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"message": "注销成功"})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true,"message": "注销成功"})
 }
 
 func Auth_user(c *gin.Context) {

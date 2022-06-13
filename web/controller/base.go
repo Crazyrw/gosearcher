@@ -33,7 +33,7 @@ type DocumentPos struct {
 func Index(c *gin.Context) {
 	//userInfo := getCurrentUser(c)
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true})
 }
 
 func Paging(total int) *utils.Paging {
@@ -122,7 +122,7 @@ func Query(c *gin.Context) {
 		RelatedSearch: relatedSearchQueries,
 		Documents:     finalDocs,
 	}
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"content": content, "page": page, "Data": pageData})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true, "content": content, "page": page, "Data": pageData})
 }
 
 func GetLastPage(c *gin.Context) {
@@ -148,7 +148,7 @@ func GetLastPage(c *gin.Context) {
 		Documents:     finalDocs,
 	}
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"content": content, "page": page, "Data": pageData})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true, "content": content, "page": page, "Data": pageData})
 }
 
 func GetNextPage(c *gin.Context) {
@@ -173,7 +173,7 @@ func GetNextPage(c *gin.Context) {
 		Documents:     finalDocs,
 	}
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"content": content, "page": page, "Data": pageData})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true, "content": content, "page": page, "Data": pageData})
 }
 
 func queryExclude(exclude string) map[int]int {
