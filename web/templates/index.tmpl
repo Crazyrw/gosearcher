@@ -80,8 +80,25 @@
             font-size: 20px;
         }
 
-        .caption{
-            font-size: 20px;
+        <
+        <
+        <
+        <
+        <
+        <
+        <
+        HEAD
+        .caption {
+
+        =
+        =
+        =
+        =
+        =
+        =
+        =
+        .caption {
+        >>> >>> > 5 fb5f8d0a581465450b05acfbb9005a0c8ff21e4 font-size: 20 px;
         }
 
         .pagination-bar {
@@ -147,12 +164,11 @@
 </nav>
 <div class="search-bar">
     <form method="get" action="/api/base/query">
-        <input class="content" name="content" type="text"
-               {{if not .content}}placeholder="请输入您要搜索的内容..." {{else}} placeholder="{{.content}}" {{end}}>
-
-        <button class="search" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        <input class="content" name="content" type="text" placeholder="请输入您要搜索的内容..." >
+        <button class="search" id="search" type="submit"><span class="glyphicon glyphicon-search"
+                                                               aria-hidden="true"></span>
         </button>
-        <div><input class="exclude" name="exclued" type="text" placeholder="过滤词"></div>
+        <div><input class="exclude" name="exclude" type="text" placeholder="请输入过滤词..."></div>
     </form>
 </div>
 
@@ -162,57 +178,60 @@
     </div>
 
 {{else}}
-{{if .Data}}
-    {{range .Data.Documents}}
-        <div class="container result-area">
-            <div class="result-block">
+    {{if .Data}}
+        {{range .Data.Documents}}
+            <div class="container result-area">
+                <div class="result-block">
+                    <div class="col-xs-6 col-md-3">
+                        <a href="#" class="thumbnail">
+                            <img src="{{ .Url }}" alt="">
+                        </a>
+                    </div>
 
-                <div class="col-xs-6 col-md-3">
-                    <a href="#" class="thumbnail">
-                        <img src="{{ .Url }}" alt="">
-                    </a>
-                </div>
-                <div class="caption"></div>
-                <!-- <div>
+                    <div class="caption"></div>
+                    <!-- <div>
                     <a class="bookmark" class="btn btn-default" href="/api/bookmark/add?docid={{.ID}}" role="button">
                         <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
                     </a>
                 </div> -->
+                </div>
             </div>
+
+        {{end}}
+
+        <div class="container related-search">
+            <h3>相关搜索</h3>
+            <ul class="list-group">
+                {{range .Data.RelatedSearch}}
+                    <a href="/api/base/query?content={{.}}&page=1"><span class="label label-default">{{.}}</span></a>
+                {{end}}
+            </ul>
         </div>
 
+
+        <div class="container pagination-bar">
+            <nav aria-label="...">
+                <ul class="pager">
+                    <li id="lastPage"><a href="/api/base/last?content={{.content}}">上一页</a></li>
+                    <li id="nextPage"><a href="/api/base/next?content={{.content}}">下一页</a></li>
+                    <span>当前在第{{.page.Page}}页，共{{.page.PageCount}}页</span>
+                </ul>
+            </nav>
+        </div>
+
+
+
     {{end}}
-
-    <div class="container related-search">
-        <h3>相关搜索</h3>
-        <ul class="list-group">
-            {{range .Data.RelatedSearch}}
-                <a href="/api/base/query?content={{.}}&page=1"><span class="label label-default">{{.}}</span></a>
-            {{end}}
-        </ul>
-    </div>
-
-
-    <div class="container pagination-bar">
-        <nav aria-label="...">
-            <ul class="pager">
-                <li id="lastPage"><a href="/api/base/last?content={{.content}}">上一页</a></li>
-                <li id="nextPage"><a href="/api/base/next?content={{.content}}">下一页</a></li>
-                <span>当前在第{{.page.Page}}页，共{{.page.PageCount}}页</span>
-            </ul>
-        </nav>
-    </div>
-
-{{end}}
 
 {{end}}
 
 
 <script>
     $(function () {
-        toHTML();
 
+        toHTML();
     });
+
 
     function toHTML() {
         var index = 0

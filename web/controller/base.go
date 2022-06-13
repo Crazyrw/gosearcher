@@ -52,7 +52,7 @@ func Query(c *gin.Context) {
 	var lens []int //terms-len(docIds)
 
 	content := c.Query("content")
-	exclude := c.Query("exclued")
+	exclude := c.Query("exclude")
 
 	excludeDocIds := queryExclude(exclude)
 
@@ -68,7 +68,13 @@ func Query(c *gin.Context) {
 	//search in index
 	for _, item := range terms {
 		//之后如果进行优化的话 可以并发的读
-		value := core.SkipList.Search([]byte(item)).Value
+		valueEntry := core.SkipList.Search([]byte(item))
+		if valueEntry == nil {
+			c.HTML(http.StatusBadRequest, "index.tmpl", gin.H{"State": false})
+			return
+		}
+		value := valueEntry.Value
+
 		ids := utils.SplitDocIdsFromValue(string(value))
 		// fmt.Println(ids)
 		lens = append(lens, len(ids))
@@ -107,8 +113,8 @@ func Query(c *gin.Context) {
 	if pageNum <= 0 {
 		pageNum = 1
 	}
-	if pageNum >= int(page.PageCount) {
-		pageNum = int(page.PageCount)
+	if pageNum >= page.PageCount {
+		pageNum = page.PageCount
 	}
 
 	//第一页的数据 返回

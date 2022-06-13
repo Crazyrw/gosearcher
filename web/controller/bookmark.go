@@ -28,9 +28,10 @@ func delCurrentBookmark(c *gin.Context) {
 func Create_bookmark(c *gin.Context) {
 
 	var user model.User
-
-	phone := c.Query("phone")
 	bookmark_name := c.Query("bookmark_name")
+	phone := c.Query("phone")
+
+	db.MysqlDB.First(&user, "phone = ?", phone)
 	if err := db.MysqlDB.First(&user, "phone = ?", phone).Error; err != nil {
 		//返回结果
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "创建失败,根据phone参数找不到用户"})
