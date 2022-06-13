@@ -55,5 +55,4 @@ func Rank(docIds []int, terms []string, lens []int) []int {
 		afterRankSlice = append(afterRankSlice, item.docId)
 	}
 	return afterRankSlice
-
 }
