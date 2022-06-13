@@ -9,15 +9,15 @@ import (
 func TestTokenizer_Cut(t *testing.T) {
 	//segs.LoadDictionary("dict.txt")
 	tokenizer := NewTokenizer()
-	results := tokenizer.Cut("杨紫230米云端相聚##杨紫##花木星球")
+	results := tokenizer.Cut("今日头条是字节的吗")
 	fmt.Println(results)
-	//[计算 在 本京 大学 深造 小明 硕士 那 毕业于 科学院 中国 所后 日 都]
+	//[今日头 条 字节]
 }
 func TestTokenizer_CutContent(t *testing.T) {
 	tokenizer := NewTokenizer()
-	results := tokenizer.CutContent("今日头条是字节的吗")
+	results := tokenizer.CutContent("今日头条")
 	fmt.Println(results)
-	//[科学院 计算 大学 硕士 中国 本京 深造 毕业于 在 日 小明 那 所后 都]
+	//[今日头 条 字节]
 }
 
 func TestJieba(t *testing.T) {

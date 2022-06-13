@@ -62,7 +62,7 @@ func Query(c *gin.Context) {
 	tokenizer := words.NewTokenizer()
 	terms = tokenizer.CutContent(content)
 	if len(terms) == 0 {
-		result.Error("no results")
+		c.HTML(http.StatusBadRequest, "index.tmpl", gin.H{"State": false})
 		return
 	}
 	//search in index
@@ -87,7 +87,7 @@ func Query(c *gin.Context) {
 	}
 	// fmt.Println(docIds)
 	if len(docIds) == 0 {
-		result.Error("no results")
+		c.HTML(http.StatusBadRequest, "index.tmpl", gin.H{"State": false})
 		return
 	}
 	//to score: get new docIds

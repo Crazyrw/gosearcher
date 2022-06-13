@@ -82,14 +82,14 @@ func GetDocuments(docIds []int) []model.Docs {
 	var files []model.Docs
 	results := db.MysqlDB.Find(&files, docIds)
 	if results.Error != nil {
-		log.Fatalln("正排索引失败")
+		log.Fatalln("正排索引失败", results.Error)
 	}
 	return files
 }
 
-func GetDocumentsFor(docIds []int) []model.Docs{
+func GetDocumentsFor(docIds []int) []model.Docs {
 	var files []model.Docs
-	for _, docId := range docIds{
+	for _, docId := range docIds {
 		var temp model.Docs
 		db.MysqlDB.First(&temp, docId)
 		files = append(files, temp)
