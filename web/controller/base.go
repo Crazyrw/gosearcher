@@ -121,7 +121,7 @@ func Query(c *gin.Context) {
 		RelatedSearch: relatedSearchQueries,
 		Documents:     finalDocs,
 	}
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"content": content, "page": page, "Data": pageData})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
 }
 
 func GetLastPage(c *gin.Context) {
