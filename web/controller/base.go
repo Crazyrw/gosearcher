@@ -52,8 +52,8 @@ func Query(c *gin.Context) {
 	var lens []int //terms-len(docIds)
 
 	content := c.Query("content")
-	exclude := c.Query("exclued")
-
+	exclude := c.Query("exclude")
+	
 	excludeDocIds := queryExclude(exclude)
 
 	pageNum := 1
