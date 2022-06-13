@@ -33,7 +33,11 @@ type DocumentPos struct {
 func Index(c *gin.Context) {
 	//userInfo := getCurrentUser(c)
 
+<<<<<<< HEAD
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true})
+=======
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true})
+>>>>>>> 5fb5f8d0a581465450b05acfbb9005a0c8ff21e4
 }
 
 func Paging(total int) *utils.Paging {
@@ -62,7 +66,7 @@ func Query(c *gin.Context) {
 	tokenizer := words.NewTokenizer()
 	terms = tokenizer.CutContent(content)
 	if len(terms) == 0 {
-		result.Error("no results")
+		c.HTML(http.StatusBadRequest, "index.tmpl", gin.H{"State": false})
 		return
 	}
 	//search in index
@@ -87,7 +91,7 @@ func Query(c *gin.Context) {
 	}
 	// fmt.Println(docIds)
 	if len(docIds) == 0 {
-		result.Error("no results")
+		c.HTML(http.StatusBadRequest, "index.tmpl", gin.H{"State": false})
 		return
 	}
 	//to score: get new docIds
@@ -122,7 +126,11 @@ func Query(c *gin.Context) {
 		RelatedSearch: relatedSearchQueries,
 		Documents:     finalDocs,
 	}
+<<<<<<< HEAD
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
+=======
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true, "content": content, "page": page, "Data": pageData})
+>>>>>>> 5fb5f8d0a581465450b05acfbb9005a0c8ff21e4
 }
 
 func GetLastPage(c *gin.Context) {
@@ -148,7 +156,11 @@ func GetLastPage(c *gin.Context) {
 		Documents:     finalDocs,
 	}
 
+<<<<<<< HEAD
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
+=======
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true, "content": content, "page": page, "Data": pageData})
+>>>>>>> 5fb5f8d0a581465450b05acfbb9005a0c8ff21e4
 }
 
 func GetNextPage(c *gin.Context) {
@@ -173,7 +185,11 @@ func GetNextPage(c *gin.Context) {
 		Documents:     finalDocs,
 	}
 
+<<<<<<< HEAD
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
+=======
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true, "content": content, "page": page, "Data": pageData})
+>>>>>>> 5fb5f8d0a581465450b05acfbb9005a0c8ff21e4
 }
 
 func queryExclude(exclude string) map[int]int {

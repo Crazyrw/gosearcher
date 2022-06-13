@@ -80,7 +80,11 @@
             font-size: 20px;
         }
 
+<<<<<<< HEAD
         .caption {
+=======
+        .caption{
+>>>>>>> 5fb5f8d0a581465450b05acfbb9005a0c8ff21e4
             font-size: 20px;
         }
 
@@ -137,6 +141,7 @@
                     <li><a href="/api/user/register">注 册</a></li>
                 {{else}}
                     <li><a href="#">{{.userInfo.Username}}</a></li>
+                    <!-- <li><a href="#">收藏</a></li> -->
                     <li><a href="/api/user/logout">登出</a></li>
                 {{end}}
 
@@ -154,28 +159,27 @@
     </form>
 </div>
 
-{{if not .state}}
+{{if not .State}}
     <div class="container result-area">
         <div class="caption">暂无该词条的搜索结果</div>
     </div>
 
 {{else}}
-    {{if .Data}}
-        {{range .Data.Documents}}
-            <div class="container result-area">
-                <div class="result-block">
-
-                    <div class="col-xs-6 col-md-3">
-                        <a href="#" class="thumbnail">
-                            <img src="{{ .Url }}" alt="">
-                        </a>
-                    </div>
-                    <div class="caption"></div>
+{{if .Data}}
+    {{range .Data.Documents}}
+        <div class="container result-area">
+            <div class="result-block">
 
                 </div>
+                <div class="caption"></div>
+                <!-- <div>
+                    <a class="bookmark" class="btn btn-default" href="/api/bookmark/add?docid={{.ID}}" role="button">
+                        <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
+                    </a>
+                </div> -->
             </div>
 
-        {{end}}
+    {{end}}
 
         <div class="container related-search">
             <h3>相关搜索</h3>
@@ -197,7 +201,19 @@
             </nav>
         </div>
 
-    {{end}}
+
+
+    <div class="container pagination-bar">
+        <nav aria-label="...">
+            <ul class="pager">
+                <li id="lastPage"><a href="/api/base/last?content={{.content}}">上一页</a></li>
+                <li id="nextPage"><a href="/api/base/next?content={{.content}}">下一页</a></li>
+                <span>当前在第{{.page.Page}}页，共{{.page.PageCount}}页</span>
+            </ul>
+        </nav>
+    </div>
+
+{{end}}
 
 {{end}}
 
