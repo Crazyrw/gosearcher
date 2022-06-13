@@ -152,7 +152,7 @@ func UserRegisterPost(c *gin.Context) {
 	result := db.MysqlDB.Create(&user) // 通过数据的指针来创建
 	fmt.Println(result)
 
-	c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"message": "OK"})
+	c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"message": "注册成功"})
 
 }
 
@@ -184,7 +184,7 @@ func UserDelete(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, resp)
 		return
 	}
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true,"message": "注销成功"})
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true, "message": "注销成功"})
 }
 
 func Auth_user(c *gin.Context) {
