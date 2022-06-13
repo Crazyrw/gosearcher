@@ -33,11 +33,7 @@ type DocumentPos struct {
 func Index(c *gin.Context) {
 	//userInfo := getCurrentUser(c)
 
-<<<<<<< HEAD
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true})
-=======
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true})
->>>>>>> 5fb5f8d0a581465450b05acfbb9005a0c8ff21e4
 }
 
 func Paging(total int) *utils.Paging {
@@ -57,7 +53,7 @@ func Query(c *gin.Context) {
 
 	content := c.Query("content")
 	exclude := c.Query("exclude")
-	
+
 	excludeDocIds := queryExclude(exclude)
 
 	pageNum := 1
@@ -72,7 +68,13 @@ func Query(c *gin.Context) {
 	//search in index
 	for _, item := range terms {
 		//之后如果进行优化的话 可以并发的读
-		value := core.SkipList.Search([]byte(item)).Value
+		valueEntry := core.SkipList.Search([]byte(item))
+		if valueEntry == nil {
+			c.HTML(http.StatusBadRequest, "index.tmpl", gin.H{"State": false})
+			return
+		}
+		value := valueEntry.Value
+
 		ids := utils.SplitDocIdsFromValue(string(value))
 		// fmt.Println(ids)
 		lens = append(lens, len(ids))
@@ -126,11 +128,7 @@ func Query(c *gin.Context) {
 		RelatedSearch: relatedSearchQueries,
 		Documents:     finalDocs,
 	}
-<<<<<<< HEAD
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
-=======
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true, "content": content, "page": page, "Data": pageData})
->>>>>>> 5fb5f8d0a581465450b05acfbb9005a0c8ff21e4
 }
 
 func GetLastPage(c *gin.Context) {
@@ -156,11 +154,7 @@ func GetLastPage(c *gin.Context) {
 		Documents:     finalDocs,
 	}
 
-<<<<<<< HEAD
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
-=======
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true, "content": content, "page": page, "Data": pageData})
->>>>>>> 5fb5f8d0a581465450b05acfbb9005a0c8ff21e4
 }
 
 func GetNextPage(c *gin.Context) {
@@ -185,11 +179,7 @@ func GetNextPage(c *gin.Context) {
 		Documents:     finalDocs,
 	}
 
-<<<<<<< HEAD
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{"state": true, "content": content, "page": page, "Data": pageData})
-=======
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{"State": true, "content": content, "page": page, "Data": pageData})
->>>>>>> 5fb5f8d0a581465450b05acfbb9005a0c8ff21e4
 }
 
 func queryExclude(exclude string) map[int]int {
